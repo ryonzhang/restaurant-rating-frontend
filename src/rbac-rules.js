@@ -7,12 +7,12 @@ const rules = {
   owner: {
     static: ['create:restaurants', 'view:reviews', 'view:replies'],
     dynamic: {
-      'view:restaurants': userCheck,
       'edit:restaurants': userCheck,
       'delete:restaurants': userCheck,
       'create:replies': userCheck,
       'edit:replies': userCheck,
       'delete:replies': userCheck,
+      'view:restaurants': userCheck,
     },
   },
   visitor: {
@@ -23,7 +23,6 @@ const rules = {
       'create:reviews',
     ],
     dynamic: {
-      'edit:restaurants': userCheck,
       'edit:reviews': userCheck,
       'delete:reviews': userCheck,
     },

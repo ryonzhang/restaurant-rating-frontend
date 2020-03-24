@@ -3,11 +3,11 @@ import { Redirect } from 'react-router-dom'
 
 import { AuthConsumer } from '../authContext'
 import Can from '../components/Can'
-import Logout from '../components/Logout'
 import Profile from '../components/Profile'
 import RestaurantsList from '../components/RestaurantsList'
 import Menu from 'semantic-ui-react/dist/commonjs/collections/Menu'
 import { Popup } from 'semantic-ui-react'
+import UsersList from '../components/UsersList'
 const DashboardPage = () => {
   const [activeItem, setActiveItem] = useState('restaurant')
   return (
@@ -53,7 +53,9 @@ const DashboardPage = () => {
                 />
               </Menu.Menu>
             </Menu>
-            <RestaurantsList />
+            {activeItem === 'restaurant' && <RestaurantsList />}
+
+            {activeItem === 'user' && <UsersList />}
           </div>
         )
       }

@@ -24,6 +24,16 @@ const EDIT_REPLIES = (review_id) => HOST + 'replies/' + review_id
 
 const DELETE_REPLIES = (review_id) => HOST + 'replies/' + review_id
 
+const VIEW_USERS = HOST + 'users'
+
+const EDIT_USERS = (user_id) => HOST + 'users/' + user_id
+
+const DELETE_ROLE = (user_id) => HOST + 'users/' + user_id + '/role'
+
+const DELETE_USERS = (user_id) => HOST + 'users/' + user_id
+
+const VIEW_ROLES = HOST + 'users/roles'
+
 export {
   VIEW_RESTAURANTS,
   CREATE_RESTAURANTS,
@@ -37,4 +47,9 @@ export {
   CREATE_REPLIES,
   EDIT_REPLIES,
   DELETE_REPLIES,
+  VIEW_USERS,
+  EDIT_USERS,
+  VIEW_ROLES,
+  DELETE_ROLE,
+  DELETE_USERS,
 }

@@ -2,14 +2,10 @@ import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
 import { AuthConsumer } from '../authContext'
-import Login from '../components/Login'
-import PostsList from '../components/PostsList'
 import Menu from 'semantic-ui-react/dist/commonjs/collections/Menu'
 import Can from '../components/Can'
-import { Button, Confirm, Grid, Popup } from 'semantic-ui-react'
-import { deleteRestaurants, viewRestaurants } from '../api/proxy'
 import RestaurantsList from '../components/RestaurantsList'
-import Profile from '../components/Profile'
+import UsersList from '../components/UsersList'
 
 const HomePage = () => {
   const [activeItem, setActiveItem] = useState('restaurant')
@@ -45,7 +41,14 @@ const HomePage = () => {
                 />
               </Menu.Menu>
             </Menu>
-            <RestaurantsList />
+            {activeItem === 'restaurant' && (
+              <Can
+                role={user.role}
+                perform="view:restaurants"
+                yes={() => <RestaurantsList />}
+              />
+            )}
+            {activeItem === 'user' && <UsersList />}
           </React.Fragment>
         )
       }

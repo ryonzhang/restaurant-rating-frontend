@@ -18,7 +18,7 @@ class Auth extends Component {
   state = {
     authenticated: false,
     user: {
-      role: 'visitor',
+      role: '',
       picture: '',
       name: '',
     },
@@ -33,12 +33,13 @@ class Auth extends Component {
     this.setState({
       authenticated: false,
       user: {
-        role: 'visitor',
+        role: '',
         picture: visitor,
-        name: 'Visitor',
+        name: '',
       },
       accessToken: '',
     })
+    localStorage.removeItem('auth')
   }
 
   handleAuthentication = () => {
@@ -62,11 +63,13 @@ class Auth extends Component {
       name: data.idTokenPayload.name,
     }
     console.log(user)
-    this.setState({
+    const auth = {
       authenticated: true,
       accessToken: data.accessToken,
       user,
-    })
+    }
+    this.setState(auth)
+    localStorage.setItem('auth', JSON.stringify(auth))
     console.log(this.state)
   }
 
