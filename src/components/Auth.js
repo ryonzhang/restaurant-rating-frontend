@@ -19,7 +19,7 @@ class Auth extends Component {
     authenticated: false,
     user: {
       role: '',
-      picture: '',
+      picture: visitor,
       name: '',
     },
     accessToken: '',
@@ -44,9 +44,9 @@ class Auth extends Component {
 
   handleAuthentication = () => {
     auth.parseHash((error, authResult) => {
-      if (error) {
+      if (error || localStorage.getItem('auth')) {
         console.log(error)
-        console.log(`Error ${error.error} Occured`)
+        // console.log(`Error ${error.error} Occured`)
         return
       }
       console.log(authResult)
@@ -55,14 +55,14 @@ class Auth extends Component {
   }
 
   setSession(data) {
+    console.log(data)
     const user = {
       id: data.idTokenPayload.sub,
       email: data.idTokenPayload.email,
-      role: data.idTokenPayload[AUTH_CONFIG.roleUrl][0],
+      role: data.idTokenPayload[AUTH_CONFIG.roleUrl][0]||'user',
       picture: data.idTokenPayload.picture,
       name: data.idTokenPayload.name,
     }
-    console.log(user)
     const auth = {
       authenticated: true,
       accessToken: data.accessToken,
@@ -74,8 +74,11 @@ class Auth extends Component {
   }
 
   render() {
+    const auth = JSON.parse(localStorage.getItem('auth'))
+    const state = auth ? auth : this.state
+    console.log(this.state)
     const authProviderValue = {
-      ...this.state,
+      ...state,
       initiateLogin: this.initiateLogin,
       handleAuthentication: this.handleAuthentication,
       logout: this.logout,

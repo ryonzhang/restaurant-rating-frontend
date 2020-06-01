@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { AuthConsumer } from '../authContext'
 import Menu from 'semantic-ui-react/dist/commonjs/collections/Menu'
 import Can from '../components/Can'
-import RestaurantsList from '../components/RestaurantsList'
+import TimezonesList from '../components/TimezonesList'
 import UsersList from '../components/UsersList'
 
 const HomePage = () => {
@@ -18,9 +18,9 @@ const HomePage = () => {
           <React.Fragment>
             <Menu size={'huge'}>
               <Menu.Item
-                name="Restaurant"
-                active={activeItem === 'restaurant'}
-                onClick={() => setActiveItem('restaurant')}
+                name="Timezones"
+                active={activeItem === 'timezone'}
+                onClick={() => setActiveItem('timezone')}
               />
               <Can
                 role={user.role}
@@ -41,14 +41,12 @@ const HomePage = () => {
                 />
               </Menu.Menu>
             </Menu>
-            {activeItem === 'restaurant' && (
               <Can
                 role={user.role}
-                perform="view:restaurants"
-                yes={() => <RestaurantsList />}
+                perform="view:timezones"
+                yes={() => <TimezonesList display={activeItem === 'timezone'}/>}
               />
-            )}
-            {activeItem === 'user' && <UsersList />}
+             <UsersList display={activeItem === 'user'}/>
           </React.Fragment>
         )
       }

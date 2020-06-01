@@ -1,9 +1,76 @@
 import React, { Component, useState, useEffect } from 'react'
 import { AuthConsumer } from '../authContext'
-import { List, Checkbox, Image, Segment, Button } from 'semantic-ui-react'
-import { deleteUsers, viewRoles, viewUsers, editUsers } from '../api/proxy'
+import {List, Checkbox, Image, Segment, Button, Input as SemanticInput, Modal} from 'semantic-ui-react'
+import {
+  deleteUsers,
+  viewRoles,
+  viewUsers,
+  editUsers,
+  addUsers,
+  getZoneInfoFromGoogle,
+  editTimezones, createTimezones, viewTimezones
+} from '../api/proxy'
 import Can from './Can'
-const UsersList = () => {
+import PlacesAutocomplete, {geocodeByAddress} from "react-places-autocomplete";
+import {Form, Input} from "semantic-ui-react-form-validator";
+import Clock from "react-live-clock";
+const UsersList = ({display}) => {
+  const CreateUsersModal = ({button}) => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    return (
+      <Modal
+        size={'small'}
+        style={{
+          height: 'max-content',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}
+        trigger={button}
+        header={'Create User'}
+        content={
+          <Segment>
+            <Form
+              onSubmit={async () => {
+                const user = await addUsers(email,password);
+                console.log(user);
+                setUsers([...users,user])
+              }}
+            >
+              <Input
+                type="text"
+                label="Email"
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                }}
+                value={email}
+                validators={['required','isEmail']}
+                errorMessages={['this field is required','this should be a valid email']}
+                width={16}
+              />
+              <Input
+                type="password"
+                label="Password"
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                }}
+                value={password}
+                validators={['required','matchRegexp:^(?=.{10,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W).*$']}
+                errorMessages={['this field is required','password has to be at least 10 chars with 1 uppercase,1 lowercase,1 special char,1 number']}
+                width={16}
+              />
+              <div className={'submit-create-users'}>
+                <Button type="submit">
+                  Submit
+                </Button>
+              </div>
+            </Form>
+          </Segment>
+        }
+      />
+    )
+  }
   const [users, setUsers] = useState([])
   const [roles, setRoles] = useState([])
   const [state, setState] = useState(false)
@@ -21,12 +88,26 @@ const UsersList = () => {
   return (
     <AuthConsumer>
       {({ user }) => (
-        <Segment style={{ width: '60%', left: '20%' }}>
+        <div className={display?'display':'none'}>
+        <div className={'user-toolbar'}>
+          <Button.Group>
+            <Can
+              role={user.role}
+              perform="create:users"
+              yes={() => (
+                <CreateUsersModal
+                  button={<Button icon="plus" />}
+                />
+              )}
+            />
+          </Button.Group>
+        </div>
+        <Segment style={{ width: '60%', left: '20%' }} >
           <Can
             role={user.role}
             perform="view:users"
             yes={() => (
-              <List divided verticalAlign="middle">
+              <List divided verticalAlign="middle" >
                 {users.map((u, index) => (
                   <List.Item>
                     <List.Content floated="right">
@@ -97,6 +178,7 @@ const UsersList = () => {
             )}
           />
         </Segment>
+        </div>
       )}
     </AuthConsumer>
   )

@@ -1,18 +1,11 @@
 import axios from 'axios'
 import {
-  VIEW_RESTAURANTS,
-  CREATE_RESTAURANTS,
-  EDIT_RESTAURANTS,
-  DELETE_RESTAURANTS,
-  VIEW_REVIEWS,
-  CREATE_REVIEWS,
-  EDIT_REVIEWS,
-  DELETE_REVIEWS,
-  VIEW_REPLIES,
-  CREATE_REPLIES,
-  EDIT_REPLIES,
-  DELETE_REPLIES,
+  VIEW_TIMEZONES,
+  CREATE_TIMEZONES,
+  EDIT_TIMEZONES,
+  DELETE_TIMEZONES,
   VIEW_USERS,
+  ADD_USERS,
   EDIT_USERS,
   VIEW_ROLES,
   DELETE_ROLE,
@@ -29,19 +22,15 @@ const config = (token) => {
   }
 }
 
+
 const getToken = () => {
   const auth = JSON.parse(localStorage.getItem('auth'))
   console.log(auth)
-  return auth.accessToken
+  return auth && auth.accessToken
 }
 
-const getUser = () => {
-  const auth = JSON.parse(localStorage.getItem('auth'))
-  return auth.user
-}
-
-const viewRestaurants = async () => {
-  const response = await axios.get(VIEW_RESTAURANTS, config(getToken()))
+const viewTimezones = async () => {
+  const response = await axios.get(VIEW_TIMEZONES, config(getToken()))
   return response.data.sort((a, b) => {
     if (a.avg_rating > b.avg_rating) {
       return 1
@@ -51,105 +40,59 @@ const viewRestaurants = async () => {
   })
 }
 
-const editRestaurants = async (id, name, description) => {
-  const response = await axios.put(
-    EDIT_RESTAURANTS(id),
-    { name, description },
-    config(getToken())
+const getZoneInfoFromGoogle = async (lat, lng) => {
+  const response = await axios.get(
+    'https://maps.googleapis.com/maps/api/timezone/json?location=' +
+      lat +
+      ',' +
+      lng +
+      '&timestamp=1458000000&key=AIzaSyCUZQEHru9-ko3r1jCXuS0wHX1urwM6ck0'
   )
   console.log(response.data)
+  return response.data
 }
 
-const createRestaurants = async (name, description, owner) => {
+const editTimezones = async (id, name, city, lat, long, tz) => {
+  const response = await axios.put(
+    EDIT_TIMEZONES(id),
+    { name, city, lat, long, tz },
+    config(getToken())
+  ).catch(err=>{
+    return err.response
+  })
+  return response
+}
+
+const createTimezones = async (name, city, lat, long, tz, user) => {
   const response = await axios.post(
-    CREATE_RESTAURANTS,
+    CREATE_TIMEZONES,
     {
       name,
-      description,
-      owner,
-      owner_id: owner.id,
+      city,
+      lat,
+      long,
+      tz,
+      user,
     },
     config(getToken())
-  )
-  console.log(response.data)
+  ).catch(err=>{
+    return err.response
+  })
+  return response
 }
 
-const deleteRestaurants = async (id) => {
-  const response = await axios.delete(
-    DELETE_RESTAURANTS(id),
-    config(getToken())
-  )
-  console.log(response.data)
-}
-
-const viewReviews = async (id) => {
-  const response = await axios.get(VIEW_REVIEWS(id), config(getToken()))
-  console.log(response.status)
-}
-
-const editReviews = async (id, date_of_visit, comment, rating, owner) => {
-  const response = await axios.put(
-    EDIT_REVIEWS(id),
-    {
-      date_of_visit,
-      comment,
-      rating,
-      owner,
-    },
-    config(getToken())
-  )
-  console.log(response.data)
-}
-
-const createReviews = async (id, date_of_visit, comment, rating, user) => {
-  const response = await axios.post(
-    CREATE_REVIEWS(id),
-    {
-      date_of_visit,
-      comment,
-      rating,
-      owner: user,
-    },
-    config(getToken())
-  )
-  console.log(response.data)
-}
-
-const deleteReviews = async (id) => {
-  const response = await axios.delete(DELETE_REVIEWS(id), config(getToken()))
-  console.log(response.data)
-}
-
-const viewReplies = async (id) => {
-  const response = await axios.get(VIEW_REPLIES(id), config(getToken()))
-  console.log(response.status)
-}
-
-const editReplies = async (id, comment, owner) => {
-  const response = await axios.post(
-    CREATE_REPLIES(id),
-    { comment, owner },
-    config(getToken())
-  )
-  console.log(response.data)
-}
-
-const createReplies = async (id, comment, owner) => {
-  const response = await axios.post(
-    CREATE_REPLIES(id),
-    { comment, owner },
-    config(getToken())
-  )
-  console.log(response.data)
-}
-
-const deleteReplies = async (id) => {
-  const response = await axios.delete(DELETE_REPLIES(id), config(getToken()))
+const deleteTimezones = async (id) => {
+  const response = await axios.delete(DELETE_TIMEZONES(id), config(getToken()))
   console.log(response.data)
 }
 
 const viewUsers = async () => {
   const response = await axios.get(VIEW_USERS, config(getToken()))
+  return response.data
+}
+
+const addUsers = async (email,password) => {
+  const response = await axios.post(ADD_USERS,{email,password}, config(getToken()))
   return response.data
 }
 
@@ -174,20 +117,14 @@ const deleteUsers = async (id) => {
 }
 
 export {
-  viewRestaurants,
-  editRestaurants,
-  createRestaurants,
-  deleteRestaurants,
-  viewReviews,
-  editReviews,
-  createReviews,
-  deleteReviews,
-  viewReplies,
-  editReplies,
-  createReplies,
-  deleteReplies,
+  viewTimezones,
+  editTimezones,
+  createTimezones,
+  deleteTimezones,
   editUsers,
   viewUsers,
+  addUsers,
   viewRoles,
   deleteUsers,
+  getZoneInfoFromGoogle,
 }

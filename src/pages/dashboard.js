@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { AuthConsumer } from '../authContext'
 import Can from '../components/Can'
 import Profile from '../components/Profile'
-import RestaurantsList from '../components/RestaurantsList'
+import TimezonesList from '../components/TimezonesList'
 import Menu from 'semantic-ui-react/dist/commonjs/collections/Menu'
 import { Popup } from 'semantic-ui-react'
 import UsersList from '../components/UsersList'
@@ -19,9 +19,9 @@ const DashboardPage = () => {
           <div>
             <Menu size={'huge'}>
               <Menu.Item
-                name="Restaurant"
-                active={activeItem === 'restaurant'}
-                onClick={() => setActiveItem('restaurant')}
+                name="Timezones"
+                active={activeItem === 'timezone'}
+                onClick={() => setActiveItem('timezone')}
               />
               <Can
                 role={user.role}
@@ -53,9 +53,8 @@ const DashboardPage = () => {
                 />
               </Menu.Menu>
             </Menu>
-            {activeItem === 'restaurant' && <RestaurantsList />}
-
-            {activeItem === 'user' && <UsersList />}
+            <TimezonesList display={activeItem === 'timezone'}/>
+            <UsersList display={activeItem === 'user'}/>
           </div>
         )
       }

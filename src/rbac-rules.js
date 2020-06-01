@@ -4,44 +4,20 @@ const userCheck = ({ userId, ownerId }) => {
 }
 
 const rules = {
-  owner: {
-    static: ['create:restaurants', 'view:reviews', 'view:replies'],
-    dynamic: {
-      'edit:restaurants': userCheck,
-      'delete:restaurants': userCheck,
-      'create:replies': userCheck,
-      'edit:replies': userCheck,
-      'delete:replies': userCheck,
-      'view:restaurants': userCheck,
-    },
+  manager: {
+    static: ['view:users', 'delete:users', 'change:roles', 'edit:users','create:users'],
   },
-  visitor: {
-    static: [
-      'view:restaurants',
-      'view:reviews',
-      'view:replies',
-      'create:reviews',
-    ],
+  user: {
+    static: ['create:timezones','view:timezones','delete:timezones'],
     dynamic: {
-      'edit:reviews': userCheck,
-      'delete:reviews': userCheck,
+      'view:timezones': userCheck,
+      'edit:timezones': userCheck,
+      'delete:timezones': userCheck,
     },
   },
   admin: {
     static: [
-      'view:restaurants',
-      'view:reviews',
-      'view:replies',
-      'edit:restaurants',
-      'edit:reviews',
-      'edit:replies',
-      'delete:restaurants',
-      'delete:reviews',
-      'delete:replies',
-      'view:users',
-      'delete:users',
-      'change:roles',
-      'edit:users',
+      'view:timezones','edit:timezones','delete:timezones','create:timezones','view:users', 'delete:users', 'change:roles', 'edit:users','create:users'
     ],
   },
 }
